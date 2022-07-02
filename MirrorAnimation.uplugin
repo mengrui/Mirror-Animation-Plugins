@@ -19,7 +19,7 @@
 		{
 			"Name": "MirrorAnimation",
 			"Type": "Runtime",
-			"LoadingPhase": "PreLoadingScreen"
+			"LoadingPhase": "PreLoadingScreen",
 			"BlacklistPlatforms": [
 				"IOS"
 			]
