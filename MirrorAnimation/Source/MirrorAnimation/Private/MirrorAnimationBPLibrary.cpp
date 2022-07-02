@@ -1,7 +1,8 @@
-// Copyright Epic Games, Inc. All Rights Reserved.
+// Copyright Terry Meng 2022 All Rights Reserved.
 
 #include "MirrorAnimationBPLibrary.h"
 #include "MirrorAnimation.h"
+#include "BoneContainer.h"
 
 UMirrorAnimationBPLibrary::UMirrorAnimationBPLibrary(const FObjectInitializer& ObjectInitializer)
 : Super(ObjectInitializer)

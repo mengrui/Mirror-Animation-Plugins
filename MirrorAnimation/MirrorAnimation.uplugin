@@ -2,13 +2,14 @@
 	"FileVersion": 1,
 	"Version": 1,
 	"VersionName": "1.0",
+	"EngineVersion": "5.0",
 	"FriendlyName": "MirrorAnimation",
 	"Description": "Generate a Mirror Animation Sequence",
 	"Category": "Animation",
 	"CreatedBy": "Terry Meng",
-	"CreatedByURL": "https://codeload.github.com/mengrui/Mirror-Animation-Plugins/zip/refs/heads/main",
+	"CreatedByURL": "",
 	"DocsURL": "https://docs.google.com/document/d/1tY7CGZyW2c6-U99gaoxy8fmWpqIiguTgZWHyqgYEOPk/edit#",
-	"MarketplaceURL": "",
+	"MarketplaceURL": "com.epicgames.launcher://ue/marketplace/product/9ac1789df8584b368a9df211a3c61429",
 	"SupportURL": "",
 	"CanContainContent": true,
 	"IsBetaVersion": false,
@@ -19,6 +20,9 @@
 			"Name": "MirrorAnimation",
 			"Type": "Runtime",
 			"LoadingPhase": "PreLoadingScreen"
+			"BlacklistPlatforms": [
+				"IOS"
+			]
 		}
 	]
 }
