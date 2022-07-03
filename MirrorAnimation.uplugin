@@ -18,10 +18,13 @@
 	"Modules": [
 		{
 			"Name": "MirrorAnimation",
-			"Type": "Runtime",
-			"LoadingPhase": "PreLoadingScreen",
-			"BlacklistPlatforms": [
-				"IOS"
+			"Type": "Editor",
+			"LoadingPhase": "PostDefault",
+			"PlatformAllowList": [
+				"Win64",
+				"Mac"
+			],
+			"PlatformDenyList": [
 			]
 		}
 	]
