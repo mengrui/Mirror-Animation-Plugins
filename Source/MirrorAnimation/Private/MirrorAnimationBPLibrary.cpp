@@ -78,25 +78,30 @@ void UMirrorAnimationBPLibrary::MakeMirrorAnimation(const UAnimSequence* InAnima
 	int32 FrameNumber = Animation->GetNumberOfFrames();
 
 	IAnimationDataController& Controller = Animation->GetController();
+	TArray<FRawAnimSequenceTrack> RawTracks;
+	RawTracks.SetNum(RefSkeleton.GetNum());
 	for (auto FrameIndex = 0; FrameIndex < FrameNumber; FrameIndex++)
 	{
 		FCompactPose Pose;
 		GetLocalMirrorPose(InAnimation, BoneContainer, InAnimation->GetTimeAtFrame(FrameIndex), Pose, *MirrorDataTable);
 		for (auto BoneIndex = 0; BoneIndex < RefSkeleton.GetNum(); BoneIndex++)
 		{
-			const FName BoneName = RefSkeleton.GetBoneName(BoneIndex);
-			FRawAnimSequenceTrack RawTrack;
 			const FCompactPoseBoneIndex CompactPoseBoneIndex = BoneContainer.MakeCompactPoseIndex(FMeshPoseBoneIndex(BoneIndex));
 			FTransform LocalTransform = Pose[CompactPoseBoneIndex];
+			check(LocalTransform.IsRotationNormalized());
 
-			RawTrack.ScaleKeys.Add(FVector3f(LocalTransform.GetScale3D()));
-			RawTrack.PosKeys.Add(FVector3f(LocalTransform.GetTranslation()));
-			RawTrack.RotKeys.Add(FQuat4f(LocalTransform.GetRotation()));
-			Controller.RemoveBoneTrack(BoneName);
-			Controller.AddBoneTrack(BoneName);
-			Controller.SetBoneTrackKeys(BoneName, RawTrack.PosKeys, RawTrack.RotKeys, RawTrack.ScaleKeys);
+			RawTracks[BoneIndex].ScaleKeys.Add(FVector3f(LocalTransform.GetScale3D()));
+			RawTracks[BoneIndex].PosKeys.Add(FVector3f(LocalTransform.GetTranslation()));
+			RawTracks[BoneIndex].RotKeys.Add(FQuat4f(LocalTransform.GetRotation()));
 		}
 	}
+
+	for (auto BoneIndex = 0; BoneIndex < RefSkeleton.GetNum(); BoneIndex++)
+	{
+		const FName BoneName = RefSkeleton.GetBoneName(BoneIndex);
+		Controller.SetBoneTrackKeys(BoneName, RawTracks[BoneIndex].PosKeys, RawTracks[BoneIndex].RotKeys, RawTracks[BoneIndex].ScaleKeys);
+	}
+
 	UPackage::SavePackage(Package, NULL, RF_Standalone, *PackageFileName, GError, nullptr, false, true, SAVE_NoError);
 }
 
