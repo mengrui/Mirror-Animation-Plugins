@@ -1,4 +1,4 @@
-// Some copyright should be here...
+// Copyright Terry Meng 2022 All Rights Reserved.
 
 using UnrealBuildTool;
 

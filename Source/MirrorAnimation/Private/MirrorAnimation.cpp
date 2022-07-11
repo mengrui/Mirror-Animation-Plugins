@@ -1,4 +1,4 @@
-// Copyright Epic Games, Inc. All Rights Reserved.
+// Copyright Terry Meng 2022 All Rights Reserved.
 
 #include "MirrorAnimation.h"
 
