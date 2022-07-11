@@ -77,24 +77,25 @@ void UMirrorAnimationBPLibrary::MakeMirrorAnimation(const UAnimSequence* InAnima
 	int32 FrameNumber = Animation->GetNumberOfFrames();
 
 	IAnimationDataController& Controller = Animation->GetController();
-	for (auto BoneIndex = 0; BoneIndex < RefSkeleton.GetNum(); BoneIndex++)
+	for (auto FrameIndex = 0; FrameIndex < FrameNumber; FrameIndex++)
 	{
-		FRawAnimSequenceTrack RawTrack;
-		for (auto FrameIndex = 0; FrameIndex < FrameNumber; FrameIndex++)
+		FCompactPose Pose;
+		GetLocalMirrorPose(InAnimation, BoneContainer, InAnimation->GetTimeAtFrame(FrameIndex), Pose, *MirrorDataTable);
+		for (auto BoneIndex = 0; BoneIndex < RefSkeleton.GetNum(); BoneIndex++)
 		{
-			FCompactPose Pose;
-			GetLocalMirrorPose(InAnimation, BoneContainer, InAnimation->GetTimeAtFrame(FrameIndex), Pose, *MirrorDataTable);
+			const FName BoneName = RefSkeleton.GetBoneName(BoneIndex);
+			FRawAnimSequenceTrack RawTrack;
 			const FCompactPoseBoneIndex CompactPoseBoneIndex = BoneContainer.MakeCompactPoseIndex(FMeshPoseBoneIndex(BoneIndex));
 			FTransform LocalTransform = Pose[CompactPoseBoneIndex];
 
 			RawTrack.ScaleKeys.Add(FVector3f(LocalTransform.GetScale3D()));
 			RawTrack.PosKeys.Add(FVector3f(LocalTransform.GetTranslation()));
 			RawTrack.RotKeys.Add(FQuat4f(LocalTransform.GetRotation()));
+			Controller.RemoveBoneTrack(BoneName);
+			Controller.AddBoneTrack(BoneName);
+			Controller.SetBoneTrackKeys(BoneName, RawTrack.PosKeys, RawTrack.RotKeys, RawTrack.ScaleKeys);
 		}
-		Controller.AddBoneTrack(RefSkeleton.GetBoneName(BoneIndex));
-		Controller.SetBoneTrackKeys(RefSkeleton.GetBoneName(BoneIndex), RawTrack.PosKeys, RawTrack.RotKeys, RawTrack.ScaleKeys);
 	}
-
 	UPackage::SavePackage(Package, NULL, RF_Standalone, *PackageFileName, GError, nullptr, false, true, SAVE_NoError);
 }
 
